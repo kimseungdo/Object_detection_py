@@ -10,4 +10,11 @@ capture(4, 1080)
 '''
 
 while True:
-    f
+    ret, frame = video.read()
+    cv2.imshow('cam test', frame)
+
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+cv2.destroyAllWindows()
