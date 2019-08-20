@@ -10,7 +10,7 @@ capture(4, 1080)
 '''
 
 while True:
-    ret, frame = video.read()
+    ret, frame = capture.read()
     cv2.imshow('cam test', frame)
 
     key = cv2.waitKey(1) & 0xFF
