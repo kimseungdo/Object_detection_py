@@ -26,32 +26,40 @@ label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
-detection_graph = tf.Graph()
+detection_graph = tf.Graph() #텐서그래프 메모리 적재
 with detection_graph.as_default():
     od_graph_def = tf.GraphDef()
     with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
         serialized_graph = fid.read()
         od_graph_def.ParseFromString(serialized_graph)
         tf.import_graph_def(od_graph_def, name='')
-
+'''
+own dataset을 가졌을때 gpu성능을 가져야하는 기이한 현상 해결불가...
+'''
     sess = tf.Session(graph=detection_graph)
 
-image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
-detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
-num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')#이미지 텐서
+detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')#감지 박스
+
+detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')#물체 인식률
+detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')#감지 클래스 라벨
+
+num_detections = detection_graph.get_tensor_by_name('num_detections:0')#이미지값
 
 video = cv2.VideoCapture(PATH_TO_VIDEO)
+'''
+웹캠으로 구동시 video = cv2.VideoCapture(0)
+
+'''
 while(video.isOpened()):
     ret, frame = video.read()
     frame_expanded = np.expand_dims(frame, axis=0)
 
-    (boxes, scores, classes, num) = sess.run(
+    (boxes, scores, classes, num) = sess.run(#프레임 단위로 이미지 값에 텐서그래프 정보를 씌움
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: frame_expanded})
 
-    vis_util.visualize_boxes_and_labels_on_image_array(
+    vis_util.visualize_boxes_and_labels_on_image_array(#결과값 생성
         frame,
         np.squeeze(boxes),
         np.squeeze(classes).astype(np.int32),
