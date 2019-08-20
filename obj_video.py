@@ -13,13 +13,13 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 '''
 MODEL_NAME = 'inference_graph' #사용할 그래프
-VIDEO_NAME = '지상낮720.mp4' #사용할 영상
+VIDEO_NAME = '지상낮720.mp4' #사용할 영상 웹캠 구동시 주석
 
 CWD_PATH = os.getcwd() #현재 작업중인 폴더
 
 PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
 PATH_TO_LABELS = os.path.join(CWD_PATH,'training','labelmap.pbtxt')
-PATH_TO_VIDEO = os.path.join(CWD_PATH, VIDEO_NAME) #그래프 라벨 영상 경로 설정
+PATH_TO_VIDEO = os.path.join(CWD_PATH, VIDEO_NAME) #그래프 라벨 영상 경로 설정 웹캠 구동시 주석
 NUM_CLASSES = 2 #라벨맵에 있는 데이터 분류 량
 
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
@@ -49,7 +49,6 @@ num_detections = detection_graph.get_tensor_by_name('num_detections:0')#이미�
 video = cv2.VideoCapture(PATH_TO_VIDEO)
 '''
 웹캠으로 구동시 video = cv2.VideoCapture(0)
-
 '''
 while(video.isOpened()):
     ret, frame = video.read()
