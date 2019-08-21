@@ -11,7 +11,8 @@ capture(4, 1080)
 
 while True:
     ret, frame = capture.read()
-    cv2.imshow('cam test', frame)
+
+    cv2.imshow('test camera', frame)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
